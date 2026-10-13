@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#17191d" />
+    <meta name="description" content="码上传：面向经授权的隔离环境文档转录，自动压缩文字并用二维码离线传递，无文档上传。" />
+    <title>码上传 | 离线文字二维码工作台</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到工作区</a>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="码上传首页">
+        <span class="brand-mark"><i data-lucide="qr-code"></i></span>
+        <span><strong>码上传</strong><small>MAUPLOAD / OPTICAL TEXT RELAY</small></span>
+      </a>
+      <div class="header-tools"><span class="local-stamp"><i data-lucide="shield-check"></i><span>本地处理 · 无上传</span></span><a id="guideLink" class="icon-button" href="./guide.html?lang=zh" target="_blank" rel="noopener" aria-label="使用手册" data-tooltip="使用手册"><i data-lucide="book-open"></i></a><div class="language-switch" role="group" aria-label="界面语言"><button data-language="zh" lang="zh-CN" aria-label="中文" aria-pressed="true">中</button><button data-language="en" lang="en" aria-label="English" aria-pressed="false">EN</button></div></div>
+    </header>
+    <div class="app-shell">
+      <nav class="navigation" aria-label="工作区">
+        <div class="nav-label machine">WORKSPACE / 02</div>
+        <button class="nav-button active" data-view="send" aria-current="page"><i data-lucide="qr-code"></i><span>生成二维码<small>文字 → 二维码</small></span></button>
+        <button class="nav-button" data-view="receive"><i data-lucide="scan-line"></i><span>扫码接收<small>二维码 → 文字</small></span></button>
+        <div class="rail-footer"><span class="machine">QMT2 / LOCAL ONLY</span><span>未加密传输</span></div>
+      </nav>
+      <main id="main" tabindex="-1">
+        <section id="sendPanel" aria-labelledby="sendTitle">
+          <div class="page-heading"><div><p class="machine eyebrow">01 / TEXT TO QR</p><h1 id="sendTitle">生成文字二维码</h1></div><span id="sendBadge" class="stamp">待输入</span></div>
+          <dl class="metric-strip" aria-label="文档容量">
+            <div><dt>字符数</dt><dd id="characterCount">0</dd></div>
+            <div><dt>原始大小</dt><dd id="originalSize">0 B</dd></div>
+            <div><dt>传输大小</dt><dd id="encodedSize">0 B</dd></div>
+            <div><dt>二维码页数</dt><dd id="pageCount">0</dd></div>
+          </dl>
+          <div class="workbench send-workbench">
+            <section class="editor-station" aria-labelledby="inputTitle">
+              <div class="station-heading"><h2 id="inputTitle"><span class="station-number">01</span>原文</h2><div class="inline-actions"><button id="importTextButton" class="button small"><i data-lucide="file-up"></i>导入文本</button><button id="clearTextButton" class="icon-button" aria-label="清空原文" data-tooltip="清空原文" disabled><i data-lucide="trash-2"></i></button></div></div>
+              <input id="textFileInput" type="file" accept="text/*,.txt,.md,.csv,.json,.xml,.yaml,.yml,.js,.ts,.py,.java,.c,.cpp,.h,.log,.sql,.sh,.html,.css" hidden />
+              <label class="sr-only" for="textInput">原文</label>
+              <textarea id="textInput" spellcheck="false" autocomplete="off" placeholder="粘贴文档、Markdown 或代码…"></textarea>
+              <div class="editor-footer"><span id="sourceLabel">UTF-8 文本</span><span>上限 10 MiB</span></div>
+              <div id="sendStatus" class="status-line" role="status">等待输入</div>
+              <p class="privacy-note"><i data-lucide="lock-open"></i>未加密。仅传输你拥有或获准导出的文档。</p>
+            </section>
+            <section class="qr-station" aria-labelledby="qrTitle">
+              <div class="station-heading"><h2 id="qrTitle"><span class="station-number">02</span>二维码</h2><label class="check-label"><input id="easierScan" type="checkbox" />更易扫描</label></div>
+              <div class="paging-toolbar">
+                <button id="previousPage" class="icon-button" aria-label="上一页" data-tooltip="上一页" disabled><i data-lucide="chevron-left"></i></button>
+                <label class="page-jump"><span class="sr-only">页码</span><input id="pageInput" type="number" min="1" value="1" aria-label="页码" disabled /><span>/ <span id="totalPages">0</span></span></label>
+                <button id="nextPage" class="icon-button" aria-label="下一页" data-tooltip="下一页" disabled><i data-lucide="chevron-right"></i></button>
+                <span class="toolbar-spacer"></span>
+                <button id="autoPlay" class="icon-button" aria-label="开始自动播放" data-tooltip="自动播放 · 1 秒/页" aria-pressed="false" disabled><i data-lucide="play"></i></button>
+                <button id="fullscreenButton" class="icon-button" aria-label="全屏二维码" data-tooltip="全屏二维码" disabled><i data-lucide="maximize"></i></button>
+              </div>
+              <div id="qrStage" class="qr-stage">
+                <div id="qrEmpty" class="empty-state"><i data-lucide="qr-code"></i><span>暂无二维码</span></div>
+                <canvas id="qrCanvas" hidden aria-label="当前页文字二维码"></canvas>
+              </div>
+              <div class="qr-readout"><span id="qrInfo" class="machine">—</span><span id="compressionInfo">—</span></div>
+              <p id="moduleWarning" class="warning-line" role="status" hidden>二维码较密，请全屏显示或开启“更易扫描”。</p>
+              <form id="retransmitForm" class="retransmit-bar"><label for="missingInput">补页</label><input id="missingInput" placeholder="例如 2, 5-8" autocomplete="off" disabled /><button id="retransmitButton" class="icon-button" type="submit" aria-label="播放缺失页" data-tooltip="播放缺失页" disabled><i data-lucide="repeat-2"></i></button><button id="allPagesButton" class="button small" type="button" hidden>全部页</button></form>
+              <p id="retransmitStatus" class="status-line" role="status" hidden></p>
+            </section>
+          </div>
+        </section>
+        <section id="receivePanel" aria-labelledby="receiveTitle" hidden>
+          <div class="page-heading"><div><p class="machine eyebrow">02 / QR TO TEXT</p><h1 id="receiveTitle">扫码接收文字</h1></div><span id="receiveBadge" class="stamp">待接收</span></div>
+          <div class="receive-console">
+            <dl><div><dt>已收页面</dt><dd><span id="receivedPages">0</span><span class="metric-denominator"> / <span id="receiveTotal">0</span></span></dd></div><div><dt>文档大小</dt><dd id="receiveSize">—</dd></div><div><dt>重复页面</dt><dd id="duplicatePages">0</dd></div></dl>
+            <progress id="receiveProgress" max="1" value="0" aria-label="接收进度"></progress>
+            <p id="receiveStatus" role="status">等待二维码</p>
+          </div>
+          <div class="workbench receive-workbench">
+            <section class="scan-station" aria-labelledby="cameraTitle">
+              <div class="station-heading"><h2 id="cameraTitle"><span class="station-number">01</span>扫描</h2><button id="importQrButton" class="button small"><i data-lucide="image-up"></i>导入图片</button></div>
+              <input id="qrImageInput" type="file" accept="image/*" multiple hidden />
+              <div class="camera-toolbar"><label for="cameraSelect" class="sr-only">摄像头</label><select id="cameraSelect" aria-label="摄像头"><option value="">默认摄像头</option></select><button id="refreshCameras" class="icon-button" aria-label="刷新摄像头" data-tooltip="刷新摄像头"><i data-lucide="refresh-cw"></i></button><button id="scanButton" class="button primary"><i data-lucide="camera"></i><span>开始扫描</span></button></div>
+              <div id="cameraStage" class="camera-stage"><video id="cameraVideo" autoplay muted playsinline hidden></video><div id="cameraEmpty" class="empty-state"><i data-lucide="camera"></i><span>摄像头未开启</span></div><div id="scanGuide" class="scan-guide" hidden></div></div>
+              <canvas id="scanCanvas" hidden></canvas>
+              <div id="scanStatus" class="status-line" role="status">摄像头已关闭</div>
+              <div class="missing-bar"><label for="missingOutput">缺失页码</label><input id="missingOutput" value="—" readonly /><button id="copyMissing" class="icon-button" aria-label="复制缺失页码" data-tooltip="复制缺失页码" disabled><i data-lucide="copy"></i></button></div>
+            </section>
+            <section class="result-station" aria-labelledby="resultTitle">
+              <div class="station-heading"><h2 id="resultTitle"><span class="station-number">02</span>还原文字</h2><span id="resultStamp" class="machine">WAITING</span></div>
+              <label class="sr-only" for="resultText">还原文字</label><textarea id="resultText" readonly spellcheck="false" placeholder="尚未收到完整文档"></textarea>
+              <div class="result-toolbar"><button id="copyText" class="button" disabled><i data-lucide="copy"></i>复制全文</button><button id="downloadText" class="button primary" disabled><i data-lucide="download"></i>下载文本</button><span class="toolbar-spacer"></span><button id="clearSession" class="icon-button destructive" aria-label="清空接收会话" data-tooltip="清空会话" disabled><i data-lucide="trash-2"></i></button></div>
+              <p class="privacy-note"><i data-lucide="hard-drive"></i>仅保存在本次页面内，刷新后清空。</p>
+            </section>
+          </div>
+        </section>
+        <footer class="workspace-footer"><span class="machine">QMT2 / UTF-8 / DEFLATE</span><span>未加密 · 无上传 · 不保存文档</span></footer>
+      </main>
+    </div>
+    <dialog id="fullscreenDialog" class="fullscreen-dialog" aria-label="全屏二维码">
+      <div id="fullscreenStage" class="fullscreen-stage"><canvas id="fullscreenCanvas" aria-label="全屏文字二维码"></canvas></div>
+      <div class="fullscreen-toolbar"><button id="fullPrevious" class="icon-button" aria-label="上一页"><i data-lucide="chevron-left"></i></button><span id="fullPageLabel" class="machine">1 / 1</span><button id="fullNext" class="icon-button" aria-label="下一页"><i data-lucide="chevron-right"></i></button><span class="toolbar-spacer"></span><button id="fullPlay" class="icon-button" aria-label="开始自动播放" aria-pressed="false"><i data-lucide="play"></i></button><span id="fullQrInfo" class="machine"></span><button id="exitFullscreen" class="icon-button" aria-label="退出全屏"><i data-lucide="minimize"></i></button></div>
+    </dialog>
+    <dialog id="confirmDialog" class="confirm-dialog" aria-labelledby="confirmTitle"><h2 id="confirmTitle">确认操作</h2><p id="confirmMessage"></p><div class="dialog-actions"><button id="confirmCancel" class="button">取消</button><button id="confirmAccept" class="button primary">确认</button></div></dialog>
+    <div id="toast" class="toast" role="status" hidden></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
