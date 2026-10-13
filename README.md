@@ -8,7 +8,7 @@
 
 暖白纸面、近黑控制台、金黄导航、橙色操作与青绿校验状态，组成克制的 Y2K / Warm Workstation 视觉语言。它是一张能工作的技术台，不是一页功能清单。
 
-[打开工作台](https://patshin.github.io/qrmax-transfer/) · [图文使用手册](https://patshin.github.io/qrmax-transfer/guide.html?lang=zh) · [下载离线包](https://patshin.github.io/qrmax-transfer/maupload-offline.zip) · [English](README.en.md)
+[打开工作台](https://patshin.github.io/MaUpload/) · [图文使用手册](https://patshin.github.io/MaUpload/guide.html?lang=zh) · [下载离线包](https://patshin.github.io/MaUpload/maupload-offline.zip) · [English](README.en.md)
 
 ![码上传文字二维码工作台](docs/workstation.png)
 
@@ -64,14 +64,14 @@
 ## 真正离线运行
 
 1. 在联网的合规设备下载 `maupload-offline.zip`，经组织批准后带入目标环境。
-2. 解压，保持 `qrmax-transfer/` 内的文件和目录完整。
+2. 解压，保持 `MaUpload/` 内的文件和目录完整。
 3. 在该文件夹的**父目录**启动已有的本地静态服务器，例如：
 
 ```bash
 python3 -m http.server 8080 --bind 127.0.0.1
 ```
 
-4. 打开 `http://127.0.0.1:8080/qrmax-transfer/`。两端均可使用各自的本机服务。运行不需要 npm 或互联网，但本机必须已有可用的静态服务器。
+4. 打开 `http://127.0.0.1:8080/MaUpload/`。两端均可使用各自的本机服务。运行不需要 npm 或互联网，但本机必须已有可用的静态服务器。
 
 不要双击 HTML 文件，模块 Worker 需要 HTTP(S)。绑定 `127.0.0.1` 仅供本机使用，不开放局域网。已加载的在线工作台可断网继续处理；**没有 Service Worker，不承诺断网后重新打开远程网址**。
 

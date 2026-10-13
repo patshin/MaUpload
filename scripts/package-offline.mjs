@@ -9,7 +9,7 @@ async function collect(directory) {
     const path = resolve(directory, entry.name);
     if (entry.isDirectory()) await collect(path);
     else if (entry.isFile() && !entry.name.endsWith(".zip")) {
-      files[`qrmax-transfer/${relative(root, path).split("\\").join("/")}`] = new Uint8Array(await readFile(path));
+      files[`MaUpload/${relative(root, path).split("\\").join("/")}`] = new Uint8Array(await readFile(path));
     }
   }
 }

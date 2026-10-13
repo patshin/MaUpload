@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { deflateSync } from "node:zlib";
 import { createServer } from "vite";
 
-const directory = process.argv[2] ?? "/tmp/qrmax-fixtures";
+const directory = process.argv[2] ?? "/tmp/maupload-fixtures";
 const server = await createServer({ configFile: false, server: { middlewareMode: true, ws: false, hmr: false }, appType: "custom" });
 try {
   const core = await server.ssrLoadModule("/src/text-transfer.ts");

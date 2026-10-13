@@ -8,7 +8,7 @@ MaUpload is a QR text workstation for **authorized document transcription in iso
 
 Warm paper, near-black consoles, golden navigation, orange actions and teal verification give it a restrained Y2K / Warm Workstation identity. The first screen is a working tool, not a marketing page.
 
-[Open workstation](https://patshin.github.io/qrmax-transfer/) · [User guide](https://patshin.github.io/qrmax-transfer/guide.html?lang=en) · [Download offline bundle](https://patshin.github.io/qrmax-transfer/maupload-offline.zip) · [简体中文](README.md)
+[Open workstation](https://patshin.github.io/MaUpload/) · [User guide](https://patshin.github.io/MaUpload/guide.html?lang=en) · [Download offline bundle](https://patshin.github.io/MaUpload/maupload-offline.zip) · [简体中文](README.md)
 
 ![MaUpload QR text workstation](docs/workstation.png)
 
@@ -64,14 +64,14 @@ Easier scanning uses up to Version 30 with ECC M, trading more pages for lower d
 ## Fully offline use
 
 1. Download `maupload-offline.zip` on an approved connected device and bring it into the target environment only through an authorized process.
-2. Extract it without changing the contents of `qrmax-transfer/`.
+2. Extract it without changing the contents of `MaUpload/`.
 3. From the folder's **parent directory**, run an existing local static server, for example:
 
 ```bash
 python3 -m http.server 8080 --bind 127.0.0.1
 ```
 
-4. Open `http://127.0.0.1:8080/qrmax-transfer/`. Each device can use its own local server. Runtime use needs neither npm nor internet, but a suitable static server must already be available.
+4. Open `http://127.0.0.1:8080/MaUpload/`. Each device can use its own local server. Runtime use needs neither npm nor internet, but a suitable static server must already be available.
 
 Do not double-click the HTML file: module workers require HTTP(S). Binding to `127.0.0.1` keeps the server local to the device. A loaded online workstation can keep processing after disconnection; **there is no Service Worker and reopening the remote URL while offline is not guaranteed**.
 

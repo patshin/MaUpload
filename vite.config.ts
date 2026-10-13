@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/qrmax-transfer/",
+  base: "/MaUpload/",
   build: {
     target: "es2022"
   }
